@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useGetUsersQuery } from "../../services/usersApi";
 import "./UsersTable.css";
 import UserData from "../../models";
+import SearchBar from "../SearchBar/SearchBar";
 
 const UsersTable = () => {
+
   const { data, error, isLoading } = useGetUsersQuery({ limit: 20, page: 1 });
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const filtered = data.filter((user: UserData) => {
+        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+        const email = user.email.toLowerCase();
+        return (
+          fullName.includes(searchQuery.toLowerCase()) ||
+          email.includes(searchQuery.toLowerCase())
+        );
+      });
+      setFilteredUsers(filtered);
+    }
+  }, [searchQuery, data]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query); 
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -20,6 +42,9 @@ const UsersTable = () => {
   return (
     <div className="users-table-container">
       <h1 className="title">User List</h1>
+      <div className="searchbar-container">
+        <SearchBar onSearch={handleSearch} />
+      </div>
       <table className="users-table">
         <thead>
           <tr>
@@ -32,26 +57,30 @@ const UsersTable = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((user: UserData) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>
-                {user.firstName} {user.lastName}
-              </td>
-              <td>{user.email}</td>
-              <td>{user.age}</td>
-              <td>
-                <span
-                  className={`status-live ${
-                    user.isActive ? "active" : "inactive"
-                  }`}
-                ></span>
-              </td>
-              <td>
-                <button className="delete-btn">Delete</button>
-              </td>
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user: UserData) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>
+                  {user.firstName} {user.lastName}
+                </td>
+                <td>{user.email}</td>
+                <td>{user.age}</td>
+                <td>
+                  <span
+                    className={`status-live ${user.isActive ? "active" : "inactive"}`}
+                  ></span>
+                </td>
+                <td >
+                  <button className="delete-btn">Delete</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr className="search-error">
+              <td className="nousers" colSpan={6}>No users found! Write another name or email</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

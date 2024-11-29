@@ -76,6 +76,10 @@
   color: red;
 }
 
+.nousers {
+  font-size: 25px;
+  color: red;
+}
 .delete-btn {
   padding: 8px 12px;
   background-color: #ff4d4d;
