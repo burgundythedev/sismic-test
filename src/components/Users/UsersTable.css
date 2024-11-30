@@ -9,7 +9,11 @@
   font-size: 2rem;
   margin-bottom: 20px;
 }
-
+.users-options-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .status-live {
   display: inline-block;
   width: 10px;

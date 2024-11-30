@@ -3,29 +3,36 @@ import { useGetUsersQuery } from "../../services/usersApi";
 import "./UsersTable.css";
 import UserData from "../../models";
 import SearchBar from "../SearchBar/SearchBar";
+import FilterActive from "../FilterActiveUsers/FilterActive";
+
 
 const UsersTable = () => {
-
   const { data, error, isLoading } = useGetUsersQuery({ limit: 20, page: 1 });
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showActiveOnly, setShowActiveOnly] = useState<boolean>(false);
   const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
 
   useEffect(() => {
     if (data) {
       const filtered = data.filter((user: UserData) => {
-        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-        const email = user.email.toLowerCase();
-        return (
-          fullName.includes(searchQuery.toLowerCase()) ||
-          email.includes(searchQuery.toLowerCase())
-        );
+        const matchesSearch =
+          user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesActiveFilter = showActiveOnly ? user.isActive : true;
+
+        return matchesSearch && matchesActiveFilter;
       });
       setFilteredUsers(filtered);
     }
-  }, [searchQuery, data]);
+  }, [searchQuery, showActiveOnly, data]);
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query); 
+    setSearchQuery(query);
+  };
+
+  const handleFilterChange = (showActive: boolean) => {
+    setShowActiveOnly(showActive);
   };
 
   if (isLoading) {
@@ -42,8 +49,9 @@ const UsersTable = () => {
   return (
     <div className="users-table-container">
       <h1 className="title">User List</h1>
-      <div className="searchbar-container">
+      <div className="users-options-container">
         <SearchBar onSearch={handleSearch} />
+        <FilterActive showActiveOnly={showActiveOnly} onFilterChange={handleFilterChange} />
       </div>
       <table className="users-table">
         <thead>
@@ -71,14 +79,16 @@ const UsersTable = () => {
                     className={`status-live ${user.isActive ? "active" : "inactive"}`}
                   ></span>
                 </td>
-                <td >
+                <td>
                   <button className="delete-btn">Delete</button>
                 </td>
               </tr>
             ))
           ) : (
             <tr className="search-error">
-              <td className="nousers" colSpan={6}>No users found! Write another name or email</td>
+              <td className="nousers" colSpan={6}>
+                No users found! Write another name or email
+              </td>
             </tr>
           )}
         </tbody>
