@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+# Sismic App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+Sismic App est une application web développée avec **React** et **TypeScript** (via **Create React App**). L'application est **responsive**, offrant une expérience utilisateur optimisée sur différentes tailles d'écran, que ce soit sur desktop ou mobile.
 
-In the project directory, you can run:
+## Choix Techniques
 
-### `npm start`
+- **React** : Utilisé pour sa simplicité et sa flexibilité dans la création d'interfaces utilisateur interactives basées sur des composants.
+- **TypeScript** : Offre une gestion stricte des types et améliore la sécurité du code en détectant les erreurs à la compilation.
+- **CSS** : Pour le stylisme de l'application, permettant une personnalisation visuelle facile et modulaire.
+- **Jest** : Choisi pour les tests unitaires et d'intégration afin de garantir que le code fonctionne comme prévu.
+- **React Redux Toolkit (RTK)** : Simplifie la gestion de l'état global de l'application avec une configuration minimale et une gestion claire des actions et des reducers.
+- **RTK Query** : Permet de simplifier les appels API et la gestion des données côté client, avec un système de mise en cache efficace.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Prérequis
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Avant d'exécuter l'application, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
-### `npm test`
+- [Node.js](https://nodejs.org/) (version 16 ou supérieure)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/) (gestionnaire de paquets)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+1. Clonez ce dépôt sur votre machine locale :
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   git clone https://github.com/burgundythedev/sismic-test.git
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Accédez au répertoire du projet :
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   cd sismic-app
 
-### `npm run eject`
+3. Installez les dépendances avec npm ou yarn :
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+   npm install
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ou
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+   yarn install
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Lancer l'application
 
-## Learn More
+1. Démarrez l'application en mode développement :
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   npm start
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   Cela lancera l'application et l'ouvrira dans votre navigateur à l'adresse [http://localhost:3000](http://localhost:3000). L'application se rechargera automatiquement si vous effectuez des modifications dans le code.
+
+## Exécution des tests
+
+Pour exécuter les tests, utilisez la commande suivante :
+
+npm test
+
+```
+
+```
