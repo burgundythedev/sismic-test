@@ -1,43 +1,44 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import {
   useGetUsersQuery,
   useDeleteUserMutation,
 } from "../../services/usersApi";
-import UserData from "../../models";
 import "./UsersTable.css";
-
 import SearchBar from "../SearchBar/SearchBar";
 import AddUserForm from "../Form/AddUserForm";
 import FilterActive from "../FilterActiveUsers/FilterActive";
+import { UserData } from "../../models";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
+import { toggleShowActiveOnly } from "../../Store/usersSlice";
 
 const UsersTable = () => {
   const { data, error, isLoading, refetch } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
-  const [showActiveOnly, setShowActiveOnly] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (data) {
-      let filtered = data.filter((user: UserData) => {
-        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-        const email = user.email.toLowerCase();
-        return (
-          fullName.includes(searchQuery.toLowerCase()) ||
-          email.includes(searchQuery.toLowerCase())
-        );
-      });
+  const searchQuery = useSelector(
+    (state: RootState) => state.users.searchQuery
+  );
+  const showActiveOnly = useSelector(
+    (state: RootState) => state.users.showActiveOnly
+  );
 
-      if (showActiveOnly) {
-        filtered = filtered.filter((user: UserData) => user.isActive);
-      }
+  const dispatch = useDispatch();
 
-      setFilteredUsers(filtered);
-    }
-  }, [searchQuery, data, showActiveOnly]);
+  const filteredUsers = useMemo(() => {
+    if (!data) return [];
+    const query = searchQuery.toLowerCase();
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
+    return data.filter((user: UserData) => {
+      if (showActiveOnly && !user.isActive) return false;
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const email = user.email.toLowerCase();
+      return fullName.includes(query) || email.includes(query);
+    });
+  }, [data, searchQuery, showActiveOnly]);
+
+  const handleFilterChange = () => {
+    dispatch(toggleShowActiveOnly());
   };
 
   const handleDelete = async (id: number) => {
@@ -49,11 +50,6 @@ const UsersTable = () => {
     }
   };
 
-  const handleAddUser = (newUser: UserData) => {
-    console.log("Added user:", newUser);
-    refetch();
-  };
-
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -61,11 +57,15 @@ const UsersTable = () => {
   return (
     <div className="users-table-container">
       <div className="users-options-container">
-        <AddUserForm onAddUser={handleAddUser} />
-        <SearchBar onSearch={handleSearch} />
+        <AddUserForm
+          onAddUser={() => {
+            refetch();
+          }}
+        />
+        <SearchBar />
         <FilterActive
           showActiveOnly={showActiveOnly}
-          onFilterChange={setShowActiveOnly}
+          onFilterChange={handleFilterChange}
         />
       </div>
       {error && <p className="error-message">Error: {error.toString()}</p>}

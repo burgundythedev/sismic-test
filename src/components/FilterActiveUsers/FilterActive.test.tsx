@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import FilterActive from "./FilterActive"; 
+import FilterActive from "./FilterActive";
 import "@testing-library/jest-dom";
 
 describe("FilterActive Component", () => {
@@ -16,14 +16,14 @@ describe("FilterActive Component", () => {
   });
 
   it("calls onFilterChange with the correct value when the button is clicked", () => {
-    const mockOnFilterChange = jest.fn(); 
+    const mockOnFilterChange = jest.fn();
     render(<FilterActive showActiveOnly={false} onFilterChange={mockOnFilterChange} />);
 
     const buttonElement = screen.getByRole("button", { name: /Display Active Users/i });
     fireEvent.click(buttonElement);
 
     expect(mockOnFilterChange).toHaveBeenCalledTimes(1);
-    expect(mockOnFilterChange).toHaveBeenCalledWith(true);
+    expect(mockOnFilterChange).toHaveBeenCalledWith(true); 
   });
 
   it("toggles to the correct state when clicked", () => {

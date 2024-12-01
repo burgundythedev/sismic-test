@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import UserData from '../models';
+import { UserData } from '../models';
+
 
 
 // Décision Technique pour mes requetes API:

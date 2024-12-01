@@ -1,18 +1,20 @@
-import { useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./SearchBar.css";
+import { setSearchQuery } from "../../Store/usersSlice";
+import { RootState } from "../../Store/store";
 
 
-interface SearchProps {
-  onSearch: (query: string) => void;
-}
 
-const SearchBar = ({ onSearch }: SearchProps) => {
-  const [searchUser, setSearchUser] = useState("");
+
+const SearchBar = () => {
+
+  const searchQuery = useSelector((state: RootState) => state.users.searchQuery);
+  const dispatch = useDispatch(); 
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
-    setSearchUser(query);
-    onSearch(query); 
+    dispatch(setSearchQuery(query)); 
   };
 
   return (
@@ -21,7 +23,7 @@ const SearchBar = ({ onSearch }: SearchProps) => {
         <input
           type="text"
           id="search-input"
-          value={searchUser}
+          value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search by name or email..."
         />

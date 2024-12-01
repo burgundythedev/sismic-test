@@ -1,5 +1,5 @@
 
-export default interface UserData {
+export interface UserData {
   id: number;
   firstName: string;
   lastName: string;
@@ -8,3 +8,7 @@ export default interface UserData {
   isActive: boolean; 
 }
 
+export interface UsersState {
+  searchQuery: string; 
+  showActiveOnly: boolean; 
+}

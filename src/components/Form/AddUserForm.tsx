@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useCreateUserMutation } from "../../services/usersApi";
-import UserData from "../../models";
 import "./AddUserForm.css";
+import { UserData } from "../../models";
 
 interface AddUserFormProps {
   onAddUser: (user: UserData) => void;
@@ -22,7 +22,7 @@ function AddUserForm({ onAddUser }: AddUserFormProps) {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "age" ? parseInt(value, 10) : value,
+      [name]: name === "age" ? Number(value) : value,
     }));
   };
 
