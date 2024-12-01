@@ -60,7 +60,6 @@ const UsersTable = () => {
 
   return (
     <div className="users-table-container">
-      <h1 className="title">User List</h1>
       <div className="users-options-container">
         <AddUserForm onAddUser={handleAddUser} />
         <SearchBar onSearch={handleSearch} />
