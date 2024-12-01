@@ -10,9 +10,10 @@
   margin-bottom: 20px;
 }
 .users-options-container{
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .status-live {
   display: inline-block;

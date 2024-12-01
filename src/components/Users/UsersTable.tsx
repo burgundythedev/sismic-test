@@ -1,58 +1,78 @@
-import React, { useState, useEffect } from "react";
-import { useGetUsersQuery } from "../../services/usersApi";
-import "./UsersTable.css";
+import { useState, useEffect } from "react";
+import {
+  useGetUsersQuery,
+  useDeleteUserMutation,
+} from "../../services/usersApi";
 import UserData from "../../models";
+import "./UsersTable.css";
+
 import SearchBar from "../SearchBar/SearchBar";
+import AddUserForm from "../Form/AddUserForm";
 import FilterActive from "../FilterActiveUsers/FilterActive";
 
-
 const UsersTable = () => {
-  const { data, error, isLoading } = useGetUsersQuery({ limit: 20, page: 1 });
+  const { data, error, isLoading, refetch } = useGetUsersQuery({
+    limit: 40,
+    page: 1,
+  });
+  const [deleteUser] = useDeleteUserMutation();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [showActiveOnly, setShowActiveOnly] = useState<boolean>(false);
   const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
+  const [showActiveOnly, setShowActiveOnly] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
-      const filtered = data.filter((user: UserData) => {
-        const matchesSearch =
-          user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesActiveFilter = showActiveOnly ? user.isActive : true;
-
-        return matchesSearch && matchesActiveFilter;
+      let filtered = data.filter((user: UserData) => {
+        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+        const email = user.email.toLowerCase();
+        return (
+          fullName.includes(searchQuery.toLowerCase()) ||
+          email.includes(searchQuery.toLowerCase())
+        );
       });
+
+      if (showActiveOnly) {
+        filtered = filtered.filter((user: UserData) => user.isActive);
+      }
+
       setFilteredUsers(filtered);
     }
-  }, [searchQuery, showActiveOnly, data]);
+  }, [searchQuery, data, showActiveOnly]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const handleFilterChange = (showActive: boolean) => {
-    setShowActiveOnly(showActive);
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteUser(id.toString()).unwrap();
+      refetch();
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    }
+  };
+
+  const handleAddUser = (newUser: UserData) => {
+    console.log("Added user:", newUser);
+    refetch();
   };
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
-    if ("message" in error) {
-      return <p>Error: {error.message}</p>;
-    }
-    return <p>An error occurred</p>;
-  }
-
   return (
     <div className="users-table-container">
       <h1 className="title">User List</h1>
       <div className="users-options-container">
+        <AddUserForm onAddUser={handleAddUser} />
         <SearchBar onSearch={handleSearch} />
-        <FilterActive showActiveOnly={showActiveOnly} onFilterChange={handleFilterChange} />
+        <FilterActive
+          showActiveOnly={showActiveOnly}
+          onFilterChange={setShowActiveOnly}
+        />
       </div>
+      {error && <p className="error-message">Error: {error.toString()}</p>}
       <table className="users-table">
         <thead>
           <tr>
@@ -76,19 +96,24 @@ const UsersTable = () => {
                 <td>{user.age}</td>
                 <td>
                   <span
-                    className={`status-live ${user.isActive ? "active" : "inactive"}`}
+                    className={`status-live ${
+                      user.isActive ? "active" : "inactive"
+                    }`}
                   ></span>
                 </td>
                 <td>
-                  <button className="delete-btn">Delete</button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(user.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr className="search-error">
-              <td className="nousers" colSpan={6}>
-                No users found! Write another name or email
-              </td>
+              <td colSpan={6}>No users found!</td>
             </tr>
           )}
         </tbody>
