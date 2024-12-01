@@ -11,10 +11,7 @@ import AddUserForm from "../Form/AddUserForm";
 import FilterActive from "../FilterActiveUsers/FilterActive";
 
 const UsersTable = () => {
-  const { data, error, isLoading, refetch } = useGetUsersQuery({
-    limit: 40,
-    page: 1,
-  });
+  const { data, error, isLoading, refetch } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);

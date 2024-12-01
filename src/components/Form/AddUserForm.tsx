@@ -113,9 +113,12 @@ function AddUserForm({ onAddUser }: AddUserFormProps) {
             required
           />
         </div>
-        <button type="submit" className="submit-btn" disabled={isLoading}>
-          {isLoading ? "Adding User..." : "Add User"}
-        </button>
+        <div className="form-group">
+          <p className="title-button">Add Users</p>
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? "Adding User..." : "Add"}
+          </button>
+        </div>
       </form>
     </div>
   );
