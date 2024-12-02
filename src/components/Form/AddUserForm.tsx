@@ -8,11 +8,13 @@ interface AddUserFormProps {
 }
 
 function AddUserForm({ onAddUser }: AddUserFormProps) {
-  const [formData, setFormData] = useState<Omit<UserData, "id" | "isActive">>({
+  const [formData, setFormData] = useState<UserData>({
     firstName: "",
     lastName: "",
     email: "",
     age: 18,
+    isActive: Math.random() < 0.5,
+    id: Date.now(),
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -49,12 +51,16 @@ function AddUserForm({ onAddUser }: AddUserFormProps) {
     setError(null);
 
     try {
-      const newUser = await createUser({
-        ...formData,
-        isActive: Math.random() < 0.5,
-      }).unwrap();
+      const newUser = await createUser(formData).unwrap();
       onAddUser(newUser);
-      setFormData({ firstName: "", lastName: "", email: "", age: 18 });
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        age: 18,
+        id: Date.now(),
+        isActive: Math.random() < 0.5,
+      });
     } catch (err) {
       console.error("Error creating user:", err);
     }
