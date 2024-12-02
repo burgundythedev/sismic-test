@@ -20,6 +20,10 @@ Avant d'exécuter l'application, assurez-vous d'avoir les éléments suivants in
 - [Node.js](https://nodejs.org/) (version 16 ou supérieure)
 - [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/) (gestionnaire de paquets)
 
+## Lien vers mon API Fictive
+
+https://mockapi.io/projects/6749ba9c8680202966325fed#
+
 ## Installation
 
 1. Clonez ce dépôt sur votre machine locale :
