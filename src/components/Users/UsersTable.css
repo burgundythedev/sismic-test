@@ -107,7 +107,7 @@
 /* Small screens  */
 @media screen and (max-width: 700px) {
   .users-table-container {
-    margin: 0px 0px;
+    margin: 50px 0px;
   }
   .users-options-container {
     flex-direction: column;
