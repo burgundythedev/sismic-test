@@ -6,7 +6,7 @@ interface FilterProps {
   onFilterChange: (showActiveOnly: boolean) => void;
 }
 
-const FilterActive: React.FC<FilterProps> = ({ showActiveOnly, onFilterChange }) => {
+const FilterActive = ({ showActiveOnly, onFilterChange }: FilterProps) => {
   const handleToggle = () => {
     onFilterChange(!showActiveOnly);
   };

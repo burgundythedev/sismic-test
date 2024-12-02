@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   useGetUsersQuery,
   useDeleteUserMutation,
@@ -37,18 +37,21 @@ const UsersTable = () => {
     });
   }, [data, searchQuery, showActiveOnly]);
 
-  const handleFilterChange = () => {
+  const handleFilterChange = useCallback(() => {
     dispatch(toggleShowActiveOnly());
-  };
+  }, [dispatch]);
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteUser(id.toString()).unwrap();
-      refetch();
-    } catch (err) {
-      console.error("Error deleting user:", err);
-    }
-  };
+  const handleDelete = useCallback(
+    async (id: number) => {
+      try {
+        await deleteUser(id.toString()).unwrap();
+        refetch();
+      } catch (err) {
+        console.error("Error deleting user:", err);
+      }
+    },
+    [deleteUser, refetch]
+  );
 
   if (isLoading) {
     return <p>Loading...</p>;
